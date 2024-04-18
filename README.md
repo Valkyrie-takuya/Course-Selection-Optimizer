@@ -1,5 +1,13 @@
 # Course Selection Optimizer
 
+何か問題やご質問がございましたら、下記のメールアドレスまでご連絡ください。  
+* yankawadev@gmail.com
+
+## 概要
+
+Pythonを利用したツールです。  
+このツールは、課題研究の選択割り当ての省力化のために制作されました。
+
 ## ライブラリのインストール
 
 > [!IMPORTANT]
@@ -9,6 +17,24 @@
 ```bash:install library
 pip install -r requirements.txt
 ```
+
+## 使用方法
+
+> [!NOTE]
+> 分類数などによって処理時間が非常に長くなる可能性があります。
+
+1. *Course_Selection_Optimizer.py*を実行します。[^1]
+2. ファイルの入力は*GUI*を通じて行うことができます。[^2]
+3. 出力は*output/selected_courses.csv*に出力されます。
+
+***
+
+[^1]: *Course_Selection_Optimizer.py*は以下のようにして実行することができます。
+```bash:execution Course_Selection_Optimizer.py
+python Course_Selection_Optimizer.py
+```
+[^2]: 現在入力されるファイルの形式はcsvに限定されています。
+
 
 ## 各関数の説明
 
