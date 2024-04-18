@@ -1,14 +1,17 @@
 # Course Selection Optimizer
 
 ## ライブラリのインストール
-:::note info
-インフォメーション
-ライブラリが正常に行われていない場合正常に動作しない可能性があります
-:::
 
+> [!IMPORTANT]
+> ライブラリが正常に行われていない場合正常に動作しない可能性があります
+
+**当プログラムに必要なライブラリの方法**
+```bash:install library
 pip install -r requirements.txt
+```
 
 ## 各関数の説明
+
 read_course_preferences(csv_path): CSV ファイルからコース設定データを読み取り、辞書を返します。  
 read_course_capacities(csv_path): CSV ファイルからコース定員データを読み取り、辞書を返します。  
 save_to_csv(selected_courses_per_student, csv_path): 学生ごとに選択したコースを CSV ファイルに保存します。  
