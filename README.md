@@ -1,5 +1,13 @@
 # Course Selection Optimizer
 
+何か問題やご質問がございましたら、下記のメールアドレスまでご連絡ください。  
+* yankawadev@gmail.com
+
+## 概要
+
+Pythonを利用したツールです。  
+このツールは、課題研究の選択割り当ての省力化のために制作されました。
+
 ## ライブラリのインストール
 
 > [!IMPORTANT]
@@ -11,6 +19,7 @@ pip install -r requirements.txt
 ```
 
 ## 使用方法
+
 > [!NOTE]
 > 分類数などによって処理時間が非常に長くなる可能性があります。
 
