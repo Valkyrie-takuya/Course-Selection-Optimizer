@@ -1,3 +1,4 @@
+import os
 import pulp
 import pandas as pd
 import numpy as np
@@ -46,8 +47,16 @@ class CourseSelectionOptimizer:
             dict: A dictionary where the keys are course names and the values are the course capacities.
         """
         csv_data = pd.read_csv(csv_path)
-        min_participants, course_capacities = {row["講座名"]: [row["最少人数"], row["最大人数"]] for _, row in csv_data.iterrows()}
+        min_participants  = {row["講座名"]: row["最少人数"] for _, row in csv_data.iterrows()}
+        course_capacities = {row["講座名"]: row["最大人数"] for _, row in csv_data.iterrows()}
         return min_participants, course_capacities
+
+    def convert_values_to_int(self, dict_data):
+        converted_dict = {}
+        for student_id, course_id_list in dict_data.items():
+            converted_course_id = int(course_id_list[0])
+            converted_dict[student_id] = converted_course_id
+        return converted_dict
 
     def save_to_csv(self, selected_courses_per_student, csv_path):
         """
@@ -77,7 +86,7 @@ class CourseSelectionOptimizer:
 
         for student_id, assigned_course in selected_courses_per_student.items():
             hope_preferences = list(self.course_preferences[student_id].keys())
-            fulfilled_preference_index = hope_preferences.index(assigned_course[0])
+            fulfilled_preference_index = hope_preferences.index(assigned_course)
             fulfilled_preference_level = fulfilled_preference_index + 1
             fulfilled_preference_levels[student_id] = fulfilled_preference_level
 
@@ -108,7 +117,7 @@ class CourseSelectionOptimizer:
         Decide the courses for each student using a linear programming approach.
 
         Returns:
-            dict: A dictionary where the keys are student IDs and the values are lists of selected courses.
+            dict: A dictionary where the keys are student IDs and the values are the selected course.
         """
         problem = pulp.LpProblem("CourseSelection", pulp.LpMaximize)
         course_selections = pulp.LpVariable.dicts(
@@ -130,9 +139,10 @@ class CourseSelectionOptimizer:
         problem.solve()
 
         selected_courses_per_student = {
-            student: [course_name for course_name, selection in course_prefs.items() if course_selections[(student, course_name)].value() == 1]
+            student: [next(course_name for course_name, selection in course_prefs.items() if course_selections[(student, course_name)].value() == 1)]
             for student, course_prefs in self.course_preferences.items()
         }
+        selected_courses_per_student = self.convert_values_to_int(selected_courses_per_student)
 
         return selected_courses_per_student
 
@@ -150,6 +160,8 @@ def main():
     course_preferences_csv_path, course_capacities_csv_path = get_file_paths()
     optimizer = CourseSelectionOptimizer(course_preferences_csv_path, course_capacities_csv_path)
     selected_courses_per_student = optimizer.decide_courses()
+    if  not os.path.isdir("output"):
+        os.mkdir("output")
     export_path = "output/selected_courses.csv"
     optimizer.save_to_csv(selected_courses_per_student, export_path)
 
