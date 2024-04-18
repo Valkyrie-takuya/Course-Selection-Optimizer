@@ -3,7 +3,6 @@
 ## ライブラリのインストール
 pip install -r requirements.txt
 
----
 ## 各関数の説明
 read_course_preferences(csv_path): CSV ファイルからコース設定データを読み取り、辞書を返します。  
 read_course_capacities(csv_path): CSV ファイルからコース定員データを読み取り、辞書を返します。  
