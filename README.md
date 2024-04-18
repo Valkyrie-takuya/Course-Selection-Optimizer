@@ -1,6 +1,11 @@
 # Course Selection Optimizer
 
 ## ライブラリのインストール
+:::note info
+インフォメーション
+ライブラリが正常に行われていない場合正常に動作しない可能性があります
+:::
+
 pip install -r requirements.txt
 
 ## 各関数の説明
