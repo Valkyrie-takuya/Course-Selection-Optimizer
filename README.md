@@ -10,6 +10,23 @@
 pip install -r requirements.txt
 ```
 
+## 使用方法
+> [!NOTE]
+> 分類数などによって処理時間が非常に長くなる可能性があります。
+
+1. *Course_Selection_Optimizer.py*を実行します。[^1]
+2. ファイルの入力は*GUI*を通じて行うことができます。[^2]
+3. 出力は*output/selected_courses.csv*に出力されます。
+
+***
+
+[^1]: *Course_Selection_Optimizer.py*は以下のようにして実行することができます。
+```bash:execution Course_Selection_Optimizer.py
+python Course_Selection_Optimizer.py
+```
+[^2]: 現在入力されるファイルの形式はcsvに限定されています。
+
+
 ## 各関数の説明
 
 read_course_preferences(csv_path): CSV ファイルからコース設定データを読み取り、辞書を返します。  
