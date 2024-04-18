@@ -2,6 +2,9 @@ import pulp
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import filedialog
+
 
 class CourseSelectionOptimizer:
     def __init__(self, course_preferences_csv_path, course_capacities_csv_path):
@@ -55,7 +58,8 @@ class CourseSelectionOptimizer:
                                                 the values are lists of selected courses.
             csv_path (str): The path to the CSV file to save the data.
         """
-        df = pd.DataFrame.from_dict(selected_courses_per_student, orient="index", columns=["4桁番号", "講座名"])
+        df = pd.DataFrame.from_dict(selected_courses_per_student, orient="index", columns=["講座名"])
+        df.index.name = "4桁番号"
         df.to_csv(csv_path, index=True)
 
     def analyze_hope_and_assignment_data(self, selected_courses_per_student):
@@ -131,13 +135,21 @@ class CourseSelectionOptimizer:
 
         return selected_courses_per_student
 
-def main():
-    course_preferences_csv_path = "course_preferences.csv"
-    course_capacities_csv_path = "course_capacities.csv"
+def get_file_paths():
+    root = tk.Tk()
+    root.withdraw()
+    root.lift()
 
+    course_preferences_csv_path = filedialog.askopenfilename(filetypes=[("データファイル","*.csv")], title="Select Course Preferences CSV File")
+    course_capacities_csv_path = filedialog.askopenfilename(filetypes=[("データファイル","*.csv")], title="Select Course Capacities CSV File")
+
+    return course_preferences_csv_path, course_capacities_csv_path
+
+def main():
+    course_preferences_csv_path, course_capacities_csv_path = get_file_paths()
     optimizer = CourseSelectionOptimizer(course_preferences_csv_path, course_capacities_csv_path)
     selected_courses_per_student = optimizer.decide_courses()
-    export_path = "selected_courses.csv"
+    export_path = "output/selected_courses.csv"
     optimizer.save_to_csv(selected_courses_per_student, export_path)
 
     fulfilled_preference_levels = optimizer.analyze_hope_and_assignment_data(selected_courses_per_student)
