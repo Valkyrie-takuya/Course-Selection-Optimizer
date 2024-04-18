@@ -96,7 +96,7 @@ def main():
     df.to_csv("course_preferences.csv", index=True)
 
     course_capacities = generate_course_capacities(course_options)
-    df = pd.DataFrame.from_dict(course_capacities, orient="index", columns=["人数"])
+    df = pd.DataFrame.from_dict([course_capacities, course_capacities], orient="index", columns=["最少人数", "最大人数"])
     df.index.name = "講座名"
     df.to_csv("course_capacities.csv", index=True)
 

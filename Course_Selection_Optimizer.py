@@ -7,9 +7,9 @@ from tkinter import filedialog
 
 
 class CourseSelectionOptimizer:
-    def __init__(self, course_preferences_csv_path, course_capacities_csv_path):
+    def __init__(self, course_preferences_csv_path, course_capacities_csv_path, min_participants=5):
         self.course_preferences = self.read_course_preferences(course_preferences_csv_path)
-        self.course_capacities = self.read_course_capacities(course_capacities_csv_path)
+        self.min_participants, self.course_capacities = self.read_course_capacities(course_capacities_csv_path)
 
     def read_course_preferences(self, csv_path):
         """
@@ -46,8 +46,8 @@ class CourseSelectionOptimizer:
             dict: A dictionary where the keys are course names and the values are the course capacities.
         """
         csv_data = pd.read_csv(csv_path)
-        course_capacities = {row["講座名"]: row["人数"] for _, row in csv_data.iterrows()}
-        return course_capacities
+        min_participants, course_capacities = {row["講座名"]: [row["最少人数"], row["最大人数"]] for _, row in csv_data.iterrows()}
+        return min_participants, course_capacities
 
     def save_to_csv(self, selected_courses_per_student, csv_path):
         """
@@ -125,6 +125,7 @@ class CourseSelectionOptimizer:
 
         for course in self.course_capacities:
             problem += pulp.lpSum([course_selections[(student, course)] for student in self.course_preferences if course in self.course_preferences[student]]) <= self.course_capacities[course]
+            problem += pulp.lpSum([course_selections[(student, course)] for student in self.course_preferences if course in self.course_preferences[student]]) >= self.min_participants
 
         problem.solve()
 
