@@ -27,7 +27,7 @@ class CourseSelectionOptimizer:
             student_id = row["4桁番号"]
             num_preferences = len([col for col in row.index if col.startswith("no")])
             course_preferences[student_id] = {
-                row[f"no{i+1}"]: 9 - i
+                row[f"no{i+1}"]: 2 ** i 
                 for i in range(num_preferences)
             }
 
@@ -109,8 +109,9 @@ class CourseSelectionOptimizer:
         fulfilled_preference_levels = [list(fulfilled_preference_data.values()).count(i) for i in range(1, num_preference_levels + 1)]
 
         plt.figure(figsize=(8, 6))
-        plt.bar(range(1, num_preference_levels + 1), fulfilled_preference_levels, width=1.0, color="skyblue")
+        plt.grid(axis="y")
         plt.xticks(np.arange(1, num_preference_levels + 1, 1))
+        plt.bar(range(1, num_preference_levels + 1), fulfilled_preference_levels, width=1.0, color="skyblue")
         plt.xlabel("Fulfilled Preference Level")
         plt.ylabel("Number of Students")
         plt.title("Distribution of Fulfilled Preference Levels")
@@ -124,7 +125,7 @@ class CourseSelectionOptimizer:
         Returns:
             dict: A dictionary where the keys are student IDs and the values are the selected course IDs.
         """
-        problem = pulp.LpProblem("CourseSelection", pulp.LpMaximize)
+        problem = pulp.LpProblem("CourseSelection", pulp.LpMinimize)
         course_selections = pulp.LpVariable.dicts(
             "course_selections",
             ((student, course) for student in self.course_preferences for course in self.course_preferences[student]),
@@ -139,7 +140,7 @@ class CourseSelectionOptimizer:
 
         for course in self.course_capacities:
             problem += pulp.lpSum([course_selections[(student, course)] for student in self.course_preferences if course in self.course_preferences[student]]) <= self.course_capacities[course]
-            problem += pulp.lpSum([course_selections[(student, course)] for student in self.course_preferences if course in self.course_preferences[student]]) >= self.min_participants
+            problem += pulp.lpSum([course_selections[(student, course)] for student in self.course_preferences if course in self.course_preferences[student]]) >= self.min_participants[course]
 
         problem.solve()
 
