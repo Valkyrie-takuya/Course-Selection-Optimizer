@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 class CourseSelectionOptimizer:
     def __init__(self, course_preferences_csv_path, course_capacities_csv_path, min_participants=5):
-        self.course_preferences = self.read_course_preferences(course_preferences_csv_path)
+        self.course_preferences, self.student_genders = self.read_course_preferences(course_preferences_csv_path)
         self.min_participants, self.course_capacities = self.read_course_capacities(course_capacities_csv_path)
 
     def read_course_preferences(self, csv_path):
@@ -17,21 +17,25 @@ class CourseSelectionOptimizer:
             csv_path (str): The path to the CSV file containing the course preferences data.
 
         Returns:
-            dict: A dictionary where the keys are student IDs and the values are dictionaries
-                  representing the course preferences for each student.
+            tuple: A tuple containing two dictionaries:
+                - course_preferences: A dictionary where the keys are student IDs and the values are dictionaries representing the course preferences for each student.
+                - student_genders: A dictionary where the keys are student IDs and the values are the corresponding genders.
         """
         csv_data = pd.read_csv(csv_path)
         course_preferences = {}
+        student_genders = {}
 
         for _, row in csv_data.iterrows():
             student_id = row["4桁番号"]
+            student_gender = row["性別"]
             num_preferences = len([col for col in row.index if col.startswith("no")])
             course_preferences[student_id] = {
-                row[f"no{i+1}"]: 2 ** i 
+                row[f"no{i+1}"]: 2 ** i
                 for i in range(num_preferences)
             }
+            student_genders[student_id] = student_gender
 
-        return course_preferences
+        return course_preferences, student_genders
 
     def read_course_capacities(self, csv_path):
         """
@@ -141,6 +145,12 @@ class CourseSelectionOptimizer:
         for course in self.course_capacities:
             problem += pulp.lpSum([course_selections[(student, course)] for student in self.course_preferences if course in self.course_preferences[student]]) <= self.course_capacities[course]
             problem += pulp.lpSum([course_selections[(student, course)] for student in self.course_preferences if course in self.course_preferences[student]]) >= self.min_participants[course]
+
+            # Add constraints for gender balance
+            num_males = pulp.lpSum([course_selections[(student, course)] for student in self.course_preferences if self.student_genders[student] == "Male"])
+            num_females = pulp.lpSum([course_selections[(student, course)] for student in self.course_preferences if self.student_genders[student] == "Female"])
+            problem += num_males >= 2  # Require at least one male participant
+            problem += num_females >= 2  # Require at least one female participant
 
         problem.solve()
 

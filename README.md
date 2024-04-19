@@ -23,14 +23,14 @@ pip install -r requirements.txt
 > [!NOTE]
 > 分類数などによって処理時間が非常に長くなる可能性があります。
 
-1. *Course_Selection_Optimizer.py*を実行します。[^1]
+1. *app.py*を実行します。[^1]
 2. ファイルの入力は*GUI*を通じて行うことができます。[^2]
 3. 出力は*output/selected_courses.csv*に出力されます。
 
 ***
 
-[^1]: *Course_Selection_Optimizer.py*は以下のようにして実行することができます。
-```bash:execution Course_Selection_Optimizer.py
+[^1]: *app.py*は以下のようにして実行することができます。
+```bash:execution app.py
 python app.py
 ```
 [^2]: 現在入力されるファイルの形式はcsvに限定されています。
