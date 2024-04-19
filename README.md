@@ -31,7 +31,7 @@ pip install -r requirements.txt
 
 [^1]: *Course_Selection_Optimizer.py*は以下のようにして実行することができます。
 ```bash:execution Course_Selection_Optimizer.py
-python Course_Selection_Optimizer.py
+python app.py
 ```
 [^2]: 現在入力されるファイルの形式はcsvに限定されています。
 

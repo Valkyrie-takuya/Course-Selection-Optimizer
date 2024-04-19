@@ -26,7 +26,7 @@ def generate_course_preferences(num_students, num_courses):
     return course_preferences
 
 
-def generate_course_capacities(courses):
+def generate_course_Number_of_people(courses):
     """Generates random capacities for each course.
 
     Args:
@@ -35,12 +35,10 @@ def generate_course_capacities(courses):
     Returns:
         dict: Dictionary containing courses as keys and capacities as values.
     """
-
-    course_capacities = {}
+    Number_of_people = {}
     for course in courses:
-        course_capacities[course] = random.randint(1, 20)  # Adjust capacity range as needed
-
-    return course_capacities
+        Number_of_people[course] = [random.randint(1, 15), random.randint(10, 30)] # Adjust capacity range as needed
+    return Number_of_people
 
 
 def generate_predicted_output(course_preferences, course_capacities):
@@ -61,9 +59,9 @@ def generate_predicted_output(course_preferences, course_capacities):
         # Assign the most preferred course within the available capacity
         for course in preferences:
             course_name = str(course)  # Convert course number to string
-            if course_capacities[course_name] > 0:
+            if course_capacities[course_name][1] > 0:
                 assigned_course = course_name
-                course_capacities[course_name] -= 1
+                course_capacities[course_name][1] -= 1
                 break
 
         # If no course could be assigned, mark as unassigned
@@ -82,7 +80,7 @@ def main():
     num_courses = 16  # Adjust the number of courses as needed
 
     # Generate test data
-    num_students = 250  # Adjust the number of students as needed
+    num_students = 500  # Adjust the number of students as needed
 
     course_preferences = generate_course_preferences(num_students, num_courses)
 
@@ -95,12 +93,12 @@ def main():
     df.index.name = "4桁番号"
     df.to_csv("course_preferences.csv", index=True)
 
-    course_capacities = generate_course_capacities(course_options)
-    df = pd.DataFrame.from_dict(course_capacities, orient="index", columns=["人数"])
+    Number_of_people = generate_course_Number_of_people(course_options)
+    df = pd.DataFrame.from_dict(Number_of_people, orient="index", columns=["最少人数", "最大人数"])
     df.index.name = "講座名"
     df.to_csv("course_capacities.csv", index=True)
 
-    predicted_output = generate_predicted_output(course_preferences, course_capacities)
+    predicted_output = generate_predicted_output(course_preferences, Number_of_people)
     print(predicted_output)
 
 
