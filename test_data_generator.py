@@ -37,7 +37,7 @@ def generate_course_Number_of_people(courses):
     """
     Number_of_people = {}
     for course in courses:
-        Number_of_people[course] = [random.randint(1, 15), random.randint(10, 30)] # Adjust capacity range as needed
+        Number_of_people[course] = [random.randint(1, 5), random.randint(1, 25)] # Adjust capacity range as needed
     return Number_of_people
 
 
@@ -77,10 +77,10 @@ def main():
     """Generates and processes course preference and capacity data."""
 
     # Define number of courses
-    num_courses = 16  # Adjust the number of courses as needed
+    num_courses = 10  # Adjust the number of courses as needed
 
     # Generate test data
-    num_students = 500  # Adjust the number of students as needed
+    num_students = 100  # Adjust the number of students as needed
 
     course_preferences = generate_course_preferences(num_students, num_courses)
 
